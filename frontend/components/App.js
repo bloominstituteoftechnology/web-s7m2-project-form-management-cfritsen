@@ -19,9 +19,15 @@ I enjoy bringing creativity and aesthetics to the digital world."
   },
 ]
 
+let template = {
+  fname: '',
+  lname: '',
+  bio: ''
+}
+
 export default function App() {
   const [members, setMembers] = useState(teamMembers)
-  const [editing, setEditing] = useState(null)
+  const [editing, setEditing] = useState(template)
   // ✨ Create a third state to track the values of the inputs
 
   useEffect(() => {
@@ -36,15 +42,27 @@ export default function App() {
     // ✨ This is the change handler for your text inputs and your textarea.
     // You can check `evt.target.id` to know which input changed
     // and then you can use `evt.target.value` to update the state of the form
+    if (evt.target.id === 'fname') {
+      setEditing({...editing, fname: evt.target.value})
+    }
+    if (evt.target.id === 'lname') {
+      setEditing({...editing, lname: evt.target.value})
+    }
+    if (evt.target.id === 'bio') {
+      setEditing({...editing, bio: evt.target.value})
+    }
   }
   const edit = id => {
     // ✨ Put this function inside a click handler for the <button>Edit</button>.
     // It should change the value of `editing` state to be the id of the member
     // whose Edit button was clicked
   }
-  const submitNewMember = () => {
+  const submitNewMember = (evt) => {
     // This takes the values of the form and constructs a new member object,
     // which is then concatenated at the end of the `members` state
+    evt.preventDefault();
+    setMembers([...members, editing])
+    setEditing(template)
   }
   const editExistingMember = () => {
     // ✨ This takes the values of the form and replaces the data of the
@@ -77,20 +95,20 @@ export default function App() {
       </div>
       <div id="membersForm">
         <h2>{editing ? 'Edit' : 'Add'} a Team Member</h2>
-        <form>
+        <form onSubmit={submitNewMember}>
           <div>
             <label htmlFor="fname">First Name </label>
-            <input id="fname" type="text" placeholder="Type First Name" />
+            <input id="fname" type="text" placeholder="Type First Name" value={editing.fname} onChange={onChange} />
           </div>
 
           <div>
             <label htmlFor="lname">Last Name </label>
-            <input id="lname" type="text" placeholder="Type Last Name" />
+            <input id="lname" type="text" placeholder="Type Last Name" value={editing.lname} onChange={onChange} />
           </div>
 
           <div>
             <label htmlFor="bio">Bio </label>
-            <textarea id="bio" placeholder="Type Bio" />
+            <textarea id="bio" placeholder="Type Bio" value={editing.bio} onChange={onChange} />
           </div>
 
           <div>
